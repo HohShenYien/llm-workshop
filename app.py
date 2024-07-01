@@ -5,11 +5,9 @@ This module demonstrates the usage of the Vertex AI Gemini 1.5 API within a Stre
 
 from typing import List, Union
 
-import PIL.Image
 import streamlit as st
 import google.generativeai as genai
 from google.generativeai.types import GenerationConfig
-import PIL
 
 genai.configure(api_key="API_KEY")
 
@@ -45,15 +43,7 @@ def get_gemini_response(
 
 st.header("Gemini 1.5 API", divider="rainbow")
 
-(tab1, tab2, tab3, tab4, tab5) = st.tabs(
-    [
-        "Generate story",
-        "Marketing campaign",
-        "Social Media Post Caption",
-        "Sentiment Analysis",
-        "Multi-turn Conversation",
-    ]
-)
+(tab1, tab2) = st.tabs(["Generate story", "Marketing campaign"])
 
 with tab1:
     st.subheader("Generate a story")
@@ -253,94 +243,3 @@ with tab2:
                     st.write(response)
             with second_tab2:
                 st.text(prompt)
-
-with tab3:
-    st.subheader("Generate a social media post caption for the product")
-
-    product_name = st.text_input(
-        label="Product Name", key="product_name", value="ZomZoo"
-    )
-
-    product_image = st.file_uploader(
-        label="Product Image", key="product_image", type=["jpg"]
-    )
-
-    if product_image:
-        st.image(PIL.Image.open(product_image))
-
-    prompt = f"""Generate a social media post caption for the product {product_name}.
-    \nIt should provide comprehensive information about the product, the features and its unique selling points."""
-
-    config = GenerationConfig(temperature=0.8, max_output_tokens=2048)
-
-    generate_t2t = st.button("Generate my Poster Caption", key="generate_caption")
-    if generate_t2t and prompt:
-        second_tab1, second_tab2 = st.tabs(["Caption", "Prompt"])
-        with st.spinner("Generating your caption ..."):
-            with second_tab1:
-                response = get_gemini_response(
-                    [prompt, PIL.Image.open(product_image)],
-                    generation_config=config,
-                )
-                if response:
-                    st.write("Your social media post caption:")
-                    st.write(response)
-            with second_tab2:
-                st.text(prompt)
-
-with tab4:
-    st.subheader("Generate a sentiment analysis of a given text")
-
-    text = st.text_area(
-        label="Enter the text to analyze",
-        key="sentiment_text",
-        value="I love this product!",
-    )
-
-    prompts = [
-        "Analyze the sentiment of the following texts and classify them as POSITIVE, NEGATIVE, or NEUTRAL.",
-        "input: It's so beautiful today!",
-        "output: POSITIVE",
-        "input: It's so cold today I can't feel my feet...",
-        "output: NEGATIVE",
-        "input: The weather today is perfectly adequate.",
-        "output: NEUTRAL",
-        f"input: {text}",
-        "output: ",
-    ]
-
-    generate_t2t = st.button("Check Sentiment", key="check_sentiment")
-    if generate_t2t and prompts:
-        with st.spinner("Generating your caption ..."):
-            response = get_gemini_response(
-                prompts,
-                generation_config=config,
-            )
-            if response:
-                st.write("The sentiment is:")
-                st.write(response)
-
-with tab5:
-    st.subheader("Multi-turn Conversation")
-    history = st.container(height=400)
-    with history:
-        if "messages" not in st.session_state:
-            st.session_state.messages = []
-
-        for message in st.session_state.messages:
-            with st.chat_message(message["role"]):
-                st.markdown(message["parts"][0])
-
-    if prompt := st.chat_input("Say something"):
-        st.session_state.messages.append({"role": "user", "parts": [prompt]})
-        with history:
-            with st.chat_message("user"):
-                st.markdown(prompt)
-        response = get_gemini_response(
-            st.session_state.messages,
-            generation_config=config,
-        )
-        st.session_state.messages.append({"role": "model", "parts": [response]})
-        with history:
-            with st.chat_message("model"):
-                st.markdown(response)

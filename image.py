@@ -1,5 +1,4 @@
 import google.generativeai as genai
-import PIL
 
 genai.configure(api_key="API_KEY")
 
@@ -13,12 +12,3 @@ generation_config = {
 }
 
 ## TODO: Add codes to describe image here
-img = PIL.Image.open("images/poster.jpg")
-
-responses = model.generate_content(
-    ["Describe what is in the image", img],
-    generation_config=generation_config,
-    stream=False,
-)
-
-print(responses.text)

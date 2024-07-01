@@ -11,10 +11,4 @@ generation_config = {
     "response_mime_type": "text/plain",
 }
 
-responses = model.generate_content(
-    "Once upon a time",
-    generation_config=generation_config,
-    stream=False,
-)
-
-print(responses.text)
+## TODO: Add code to use the model to reply a message here

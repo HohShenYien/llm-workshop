@@ -52,9 +52,6 @@ with tab1:
     character_name = st.text_input(
         "Enter character name: \n\n", key="character_name", value="Mittens"
     )
-    character_age = st.number_input(
-        "Enter character age: \n\n", key="character_age", value=20
-    )
     character_type = st.text_input(
         "What type of character is it? \n\n", key="character_type", value="Cat"
     )
@@ -111,7 +108,6 @@ with tab1:
     character_type: {character_type} \n
     character_persona: {character_persona} \n
     character_location: {character_location} \n
-    character_age: {character_age} \n
     story_premise: {",".join(story_premise)} \n
     If the story is "short", then make sure to have 5 chapters or else if it is "long" then 10 chapters.
     Important point is that each chapters should be generated based on the premise given above.
